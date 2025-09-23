@@ -1,4 +1,3 @@
-// app.tsx
 import { useEffect, useState } from "react";
 
 type Board = number[][];
@@ -58,7 +57,7 @@ function has128(b: Board): boolean {
 function canMove(b: Board): boolean {
   // 빈칸이 있으면 가능
   if (getEmptyCells(b).length > 0) return true;
-  // 인접 합체 가능성 검사
+  // 인접 합체 가능한지 검사
   for (let r = 0; r < SIZE; r++) {
     for (let c = 0; c < SIZE; c++) {
       const v = b[r][c];
