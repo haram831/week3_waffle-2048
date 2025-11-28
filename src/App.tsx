@@ -1,10 +1,10 @@
-import { useEffect, useState } from "react";
+import { useEffect, useState } from 'react';
 
 type Board = number[][];
-type Dir = "left" | "right" | "up" | "down";
+type Dir = 'left' | 'right' | 'up' | 'down';
 
 const SIZE = 4;
-const LS_KEY = "2048:v1"; // 저장 키
+const LS_KEY = '2048:v1'; // 저장 키
 
 type SaveState = {
   board: Board;
@@ -87,7 +87,10 @@ function moveLineLeft(line: number[]): { next: number[]; gained: number } {
   return { next: merged, gained };
 }
 
-function moveBoard(b: Board, dir: Dir): { board: Board; gained: number; moved: boolean } {
+function moveBoard(
+  b: Board,
+  dir: Dir
+): { board: Board; gained: number; moved: boolean } {
   let gained = 0;
   let moved = false;
   const nb = cloneBoard(b);
@@ -98,14 +101,14 @@ function moveBoard(b: Board, dir: Dir): { board: Board; gained: number; moved: b
     return next;
   };
 
-  if (dir === "left") {
+  if (dir === 'left') {
     for (let r = 0; r < SIZE; r++) {
       const before = nb[r].slice();
       const after = applyRow(nb[r]);
       nb[r] = after;
       if (!moved && before.some((v, i) => v !== after[i])) moved = true;
     }
-  } else if (dir === "right") {
+  } else if (dir === 'right') {
     for (let r = 0; r < SIZE; r++) {
       const before = nb[r].slice();
       const reversed = nb[r].slice().reverse();
@@ -113,7 +116,7 @@ function moveBoard(b: Board, dir: Dir): { board: Board; gained: number; moved: b
       nb[r] = after;
       if (!moved && before.some((v, i) => v !== after[i])) moved = true;
     }
-  } else if (dir === "up") {
+  } else if (dir === 'up') {
     for (let c = 0; c < SIZE; c++) {
       const col = Array.from({ length: SIZE }, (_, r) => nb[r][c]);
       const before = col.slice();
@@ -121,7 +124,7 @@ function moveBoard(b: Board, dir: Dir): { board: Board; gained: number; moved: b
       for (let r = 0; r < SIZE; r++) nb[r][c] = after[r];
       if (!moved && before.some((v, i) => v !== after[i])) moved = true;
     }
-  } else if (dir === "down") {
+  } else if (dir === 'down') {
     for (let c = 0; c < SIZE; c++) {
       const col = Array.from({ length: SIZE }, (_, r) => nb[r][c]).reverse();
       const before = col.slice().reverse();
@@ -171,10 +174,10 @@ export default function App() {
     const onKey = (e: KeyboardEvent) => {
       if (gameOver) return;
       let dir: Dir | null = null;
-      if (e.key === "ArrowLeft") dir = "left";
-      else if (e.key === "ArrowRight") dir = "right";
-      else if (e.key === "ArrowUp") dir = "up";
-      else if (e.key === "ArrowDown") dir = "down";
+      if (e.key === 'ArrowLeft') dir = 'left';
+      else if (e.key === 'ArrowRight') dir = 'right';
+      else if (e.key === 'ArrowUp') dir = 'up';
+      else if (e.key === 'ArrowDown') dir = 'down';
       if (!dir) return;
 
       e.preventDefault();
@@ -194,8 +197,8 @@ export default function App() {
         gameOver: reached128 || noMoves,
       });
     };
-    window.addEventListener("keydown", onKey, { passive: false });
-    return () => window.removeEventListener("keydown", onKey);
+    window.addEventListener('keydown', onKey, { passive: false });
+    return () => window.removeEventListener('keydown', onKey);
   }, [board, score, gameOver, setSave]);
 
   const newGame = () => {
@@ -207,27 +210,43 @@ export default function App() {
   };
 
   return (
-    <div style={{ fontFamily: "system-ui, sans-serif", display: "grid", gap: 12, placeItems: "center", padding: 20 }}>
+    <div
+      style={{
+        fontFamily: 'system-ui, sans-serif',
+        display: 'grid',
+        gap: 12,
+        placeItems: 'center',
+        padding: 20,
+      }}
+    >
       <h1 style={{ margin: 0 }}>2048</h1>
 
-      <div style={{ display: "flex", gap: 16, alignItems: "center" }}>
+      <div style={{ display: 'flex', gap: 16, alignItems: 'center' }}>
         <div style={{ fontWeight: 700 }}>Score: {score}</div>
-        <button onClick={newGame} style={{ padding: "8px 12px", borderRadius: 8, border: "1px solid #ccc", cursor: "pointer" }}>
+        <button
+          onClick={newGame}
+          style={{
+            padding: '8px 12px',
+            borderRadius: 8,
+            border: '1px solid #ccc',
+            cursor: 'pointer',
+          }}
+        >
           New Game
         </button>
       </div>
 
       <div
         style={{
-          position: "relative",
+          position: 'relative',
           padding: 12,
-          background: "#bbada0",
+          background: '#bbada0',
           borderRadius: 12,
-          display: "grid",
+          display: 'grid',
           gridTemplateColumns: `repeat(${SIZE}, 90px)`,
           gridTemplateRows: `repeat(${SIZE}, 90px)`,
           gap: 12,
-          userSelect: "none",
+          userSelect: 'none',
         }}
       >
         {board.map((row, r) =>
@@ -238,44 +257,53 @@ export default function App() {
                 width: 90,
                 height: 90,
                 background: tileBg(v),
-                color: v <= 4 ? "#776e65" : "#f9f6f2",
+                color: v <= 4 ? '#776e65' : '#f9f6f2',
                 borderRadius: 8,
-                display: "grid",
-                placeItems: "center",
+                display: 'grid',
+                placeItems: 'center',
                 fontSize: v >= 1024 ? 30 : v >= 128 ? 32 : v >= 16 ? 34 : 36,
                 fontWeight: 800,
-                boxShadow: "inset 0 0 0 2px rgba(0,0,0,0.05)",
+                boxShadow: 'inset 0 0 0 2px rgba(0,0,0,0.05)',
               }}
             >
-              {v !== 0 ? v : ""}
+              {v !== 0 ? v : ''}
             </div>
           ))
         )}
 
-
         {gameOver && (
           <div
             style={{
-              position: "absolute",
+              position: 'absolute',
               inset: 0,
-              background: "rgba(0,0,0,0.45)",
+              background: 'rgba(0,0,0,0.45)',
               borderRadius: 12,
-              display: "grid",
-              placeItems: "center",
+              display: 'grid',
+              placeItems: 'center',
             }}
           >
             <div
               style={{
-                background: "#fff",
-                padding: "20px 24px",
+                background: '#fff',
+                padding: '20px 24px',
                 borderRadius: 12,
-                textAlign: "center",
+                textAlign: 'center',
                 minWidth: 260,
               }}
             >
-              <div style={{ fontSize: 22, fontWeight: 800, marginBottom: 8 }}>You reached 128! 🎉</div>
+              <div style={{ fontSize: 22, fontWeight: 800, marginBottom: 8 }}>
+                You reached 128! 🎉
+              </div>
               <div style={{ marginBottom: 16 }}>게임이 종료되었습니다.</div>
-              <button onClick={newGame} style={{ padding: "8px 12px", borderRadius: 8, border: "1px solid #ccc", cursor: "pointer" }}>
+              <button
+                onClick={newGame}
+                style={{
+                  padding: '8px 12px',
+                  borderRadius: 8,
+                  border: '1px solid #ccc',
+                  cursor: 'pointer',
+                }}
+              >
                 New Game
               </button>
             </div>
@@ -283,7 +311,9 @@ export default function App() {
         )}
       </div>
 
-      <p style={{ opacity: 0.7, marginTop: 4 }}>방향키로 조작하세요. 128이 나오면 종료됩니다.</p>
+      <p style={{ opacity: 0.7, marginTop: 4 }}>
+        방향키로 조작하세요. 128이 나오면 종료됩니다.
+      </p>
     </div>
   );
 }
@@ -291,18 +321,18 @@ export default function App() {
 // -------------------- 타일 색상 --------------------
 function tileBg(v: number): string {
   const map: Record<number, string> = {
-    0: "#cdc1b4",
-    2: "#eee4da",
-    4: "#ede0c8",
-    8: "#f2b179",
-    16: "#f59563",
-    32: "#f67c5f",
-    64: "#f65e3b",
-    128: "#edcf72",
-    256: "#edcc61",
-    512: "#edc850",
-    1024: "#edc53f",
-    2048: "#edc22e",
+    0: '#cdc1b4',
+    2: '#eee4da',
+    4: '#ede0c8',
+    8: '#f2b179',
+    16: '#f59563',
+    32: '#f67c5f',
+    64: '#f65e3b',
+    128: '#edcf72',
+    256: '#edcc61',
+    512: '#edc850',
+    1024: '#edc53f',
+    2048: '#edc22e',
   };
-  return map[v] ?? "#3c3a32";
+  return map[v] ?? '#3c3a32';
 }
